@@ -22,7 +22,7 @@ CFLG=-O3 -Wall
 LIBS=-lglut -lGLU -lGL -lm
 endif
 #  OSX/Linux/Unix/Solaris
-LEAN=rm -f $(EXE) *.o *.a
+CLEAN=rm -f $(EXE) *.o *.a
 endif
 
 # Compile rules
