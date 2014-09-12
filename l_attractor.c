@@ -36,6 +36,7 @@ double s = 10;
 double b = 2.6666;
 double r = 28;
 int i = 0.0;
+char formula_adj = 's';
 
 // Change over time variables
 double dx = 0.0;
@@ -93,7 +94,7 @@ void display()
    //  Draw 10 pixel yellow points
    glColor3f(1,1,0);
    glPointSize(1);
-   glBegin(GL_POINTS);
+   glBegin(GL_LINE_STRIP);
    switch (mode)
    {
    //  Two dimensions
@@ -175,10 +176,11 @@ void display()
          z = (double)(z + dt*dz);
          
          // Set Color and Create Point
-         if ( dx < 0.1 && dy < 0.1 && dz < 0.1)
-            glColor3f(8.0, 8.0, 8.0);
-         else
-            glColor3f(dx, dy, dz);
+         //if ( dx < 0.1 && dy < 0.1 && dz < 0.1)
+            //glColor3f(8.0, 8.0, 8.0);
+         //else
+            //glColor3f(dx, dy, dz);
+         glColor3f(1.0/dx, 1.0/dy, 1.0/dz);
          glVertex3d( x, y, z);
       }
       break;
@@ -264,16 +266,53 @@ void key(unsigned char ch,int x,int y)
       if (mode==4) w = 1;
    }
    
-   //  Alter s for equation by +1
+   // Switch formula variable to adjust
+   else if (ch == 's')
+   {
+      formula_adj = 's';
+   }
+   else if (ch == 'b')
+   {
+      formula_adj = 'b';
+   }
+   else if (ch == 'r')
+   {
+      formula_adj = 'r';
+   }
+
+   // Increase variable for lorenz equation
    else if (ch == '+')
    {
-      s = s + 1;  
+      if (formula_adj == 's')
+      {
+         s = s + 0.5;
+      }  
+      else if (formula_adj == 'b')
+      {
+         b = b + 0.2;
+      }
+      else
+      {
+         r = r + 1;
+      }
    }
-   //  Alter s for equation by -1
+   //  Decrease variable for lorenz equation
    else if (ch == '-')
    {
-      s = s - 1;
+      if (formula_adj == 's')
+      {
+         s = s - 0.5;
+      }  
+      else if (formula_adj == 'b')
+      {
+         b = b - 0.2;
+      }
+      else
+      {
+         r = r - 1;
+      }
    }
+
    //  Tell GLUT it is necessary to redisplay the scene
    glutPostRedisplay();
 }
