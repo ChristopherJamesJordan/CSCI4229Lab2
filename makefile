@@ -1,4 +1,6 @@
-# Lorenx Attractor
+# Lab 2: Lorenx Attractor
+# Christopher Jordan
+# CSCI 4229 Fall 2014
 EXE=l_attractor
 
 # Main target
@@ -20,7 +22,7 @@ CFLG=-O3 -Wall
 LIBS=-lglut -lGLU -lGL -lm
 endif
 #  OSX/Linux/Unix/Solaris
-CLEAN=rm -f $(EXE) *.o *.a
+LEAN=rm -f $(EXE) *.o *.a
 endif
 
 # Compile rules

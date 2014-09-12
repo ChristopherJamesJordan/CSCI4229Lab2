@@ -54,7 +54,6 @@ double x = 0.0;     // X variable
 double y = 0.0;     // Y variable
 double z = 0.0;     // Z variable
 double def_z = 0.0; // Z variable default value
-double w = 1.0;     // W variable
 double def_w = 1.0; // W variable default value
 
 /*
@@ -92,8 +91,7 @@ void display()
    glRotated(th,0,1,0);
    
    //  Draw 10 pixel yellow points
-   glColor3f(1,1,0);
-   glPointSize(1);
+   glPointSize(2);
    glBegin(GL_LINE_STRIP);
    switch (mode)
    {
@@ -102,59 +100,7 @@ void display()
    /*  Coordinates  */
       x = 1.0;
       y = 1.0;
-
-      /*  Time step  */
-      dt = 0.001;
-
-      /*
-       *  Integrate 50,000 steps (50 time units with dt = 0.001)
-       *  Explicit Euler integration
-       */
-      for (i=0; i<50000; i++)
-      {
-         dx = s*(y-x);
-         dy = x*(r-z)-y;
-         x = (double)(x + dt*dx);
-         y = (double)(y + dt*dy);
-         glColor3f(dx, dy, 0);
-         glVertex2d(x, y);
-      }
-      break;
-   //  Three dimensions - constant Z
-   case 2:
-      /*  Coordinates  */
-      x = 1.0;
-      y = 1.0;
-      z = def_z;
-
-      /*  Time step  */
-      dt = 0.001;
-
-      /*
-       *  Integrate 50,000 steps (50 time units with dt = 0.001)
-       *  Explicit Euler integration
-       */
-      for (i=0; i<50000; i++)
-      {
-         dx = s*(y-x);
-         dy = x*(r-z)-y;
-         x = (double)(x + dt*dx);
-         y = (double)(y + dt*dy);
-         glColor3f(dx, dy, 0);
-         glVertex3d( x, y, z);
-      }
-      break;
-   //  Three dimensions - variable Z
-   case 3:
-      /*  Coordinates  */
-      x = 1.0;
-      y = 1.0;
       z = 1.0;
-
-      // Reset Color
-      cx = 0.0;
-      cy = 0.0;
-      cz = 0.0;
 
       /*  Time step  */
       dt = 0.001;
@@ -170,27 +116,40 @@ void display()
          dy = x*(r-z)-y;
          dz = x*y - b*z;
          
-         //Determine new variables for point
+         // Determine new variables for point
          x = (double)(x + dt*dx);
          y = (double)(y + dt*dy);
          z = (double)(z + dt*dz);
          
-         // Set Color and Create Point
-         //if ( dx < 0.1 && dy < 0.1 && dz < 0.1)
-            //glColor3f(8.0, 8.0, 8.0);
-         //else
-            //glColor3f(dx, dy, dz);
-         glColor3f(1.0/dx, 1.0/dy, 1.0/dz);
-         glVertex3d( x, y, z);
+         /* Set Color and Create Point */
+         // Make dx positive and scale
+         if (dx < 0)
+            cx = (-1 * dx) / 200.00;
+         else
+            cx = dx / 200.00;
+         
+         // Make dy positive and scale
+         if (dy < 0)
+            cy = (-1 * dy) / 200.00;
+         else
+            cy = dy / 200.00;
+         
+         //Make dz positive and scale
+         if (dx < 0)
+            cz = (-1 * dz) / 200.00;
+         else
+            cz = dz / 200.00;
+
+         glColor3f(cx, cy, cz);
+         glVertex2d(x, y);
       }
       break;
-   //  Four dimensions
-   case 4:
+   //  Three dimensions - constant Z
+   case 2:
       /*  Coordinates  */
       x = 1.0;
       y = 1.0;
       z = 1.0;
-      w = def_w;
 
       /*  Time step  */
       dt = 0.001;
@@ -201,14 +160,135 @@ void display()
        */
       for (i=0; i<50000; i++)
       {
+         //Calculate differentials
          dx = s*(y-x);
          dy = x*(r-z)-y;
          dz = x*y - b*z;
+         
+         // Determine new variables for point
          x = (double)(x + dt*dx);
          y = (double)(y + dt*dy);
          z = (double)(z + dt*dz);
-         glColor3f(dx, dy, dz);
-         glVertex4d(x, y, z, w);
+         
+         /* Set Color and Create Point */
+         // Make dx positive and scale
+         if (dx < 0)
+            cx = (-1 * dx) / 200.00;
+         else
+            cx = dx / 200.00;
+         
+         // Make dy positive and scale
+         if (dy < 0)
+            cy = (-1 * dy) / 200.00;
+         else
+            cy = dy / 200.00;
+         
+         //Make dz positive and scale
+         if (dx < 0)
+            cz = (-1 * dz) / 200.00;
+         else
+            cz = dz / 200.00;
+
+         glColor3f(cx, cy, cz);
+         glVertex3d( x, y, def_z);
+      }
+      break;
+   //  Three dimensions - variable Z
+   case 3:
+      /*  Coordinates  */
+      x = 1.0;
+      y = 1.0;
+      z = 1.0;
+
+      /*  Time step  */
+      dt = 0.001;
+
+      /*
+       *  Integrate 50,000 steps (50 time units with dt = 0.001)
+       *  Explicit Euler integration
+       */
+      for (i=0; i<50000; i++)
+      {
+         //Calculate differentials
+         dx = s*(y-x);
+         dy = x*(r-z)-y;
+         dz = x*y - b*z;
+         
+         // Determine new variables for point
+         x = (double)(x + dt*dx);
+         y = (double)(y + dt*dy);
+         z = (double)(z + dt*dz);
+         
+         /* Set Color and Create Point */
+         // Make dx positive and scale
+         if (dx < 0)
+            cx = (-1 * dx) / 200.00;
+         else
+            cx = dx / 200.00;
+         
+         // Make dy positive and scale
+         if (dy < 0)
+            cy = (-1 * dy) / 200.00;
+         else
+            cy = dy / 200.00;
+         
+         //Make dz positive and scale
+         if (dx < 0)
+            cz = (-1 * dz) / 200.00;
+         else
+            cz = dz / 200.00;
+
+         glColor3f(cx, cy, cz);
+         glVertex3d( x, y, z);
+      }
+      break;
+   //  Four dimensions
+   case 4:
+      /*  Coordinates  */
+      x = 1.0;
+      y = 1.0;
+      z = 1.0;
+
+      /*  Time step  */
+      dt = 0.001;
+
+      /*
+       *  Integrate 50,000 steps (50 time units with dt = 0.001)
+       *  Explicit Euler integration
+       */
+      for (i=0; i<50000; i++)
+      {
+         //Calculate differentials
+         dx = s*(y-x);
+         dy = x*(r-z)-y;
+         dz = x*y - b*z;
+         
+         // Determine new variables for point
+         x = (double)(x + dt*dx);
+         y = (double)(y + dt*dy);
+         z = (double)(z + dt*dz);
+         
+         /* Set Color and Create Point */
+         // Make dx positive and scale
+         if (dx < 0)
+            cx = (-1 * dx) / 200.00;
+         else
+            cx = dx / 200.00;
+         
+         // Make dy positive and scale
+         if (dy < 0)
+            cy = (-1 * dy) / 200.00;
+         else
+            cy = dy / 200.00;
+         
+         //Make dz positive and scale
+         if (dx < 0)
+            cz = (-1 * dz) / 200.00;
+         else
+            cz = dz / 200.00;
+
+         glColor3f(cx, cy, cz);
+         glVertex4d(x, y, z, def_w);
       }
       break;
    }
@@ -218,19 +298,19 @@ void display()
    glColor3f(1,1,1);
    glBegin(GL_LINES);
       glVertex3d(0,0,0);
-      glVertex3d(50,0,0);
+      glVertex3d(dim - 5,0,0);
       glVertex3d(0,0,0);
-      glVertex3d(0,50,0);
+      glVertex3d(0,dim -5,0);
       glVertex3d(0,0,0);
-      glVertex3d(0,0,50);
+      glVertex3d(0,0,dim -5);
    glEnd();
 
    //  Label axes
-   glRasterPos3d(50,0,0);
+   glRasterPos3d(dim - 5,0,0);
    Print("X");
-   glRasterPos3d(0,50,0);
+   glRasterPos3d(0,dim - 5,0);
    Print("Y");
-   glRasterPos3d(0,0,50);
+   glRasterPos3d(0,0,dim -5);
    Print("Z");
 
    //  Display parameters
@@ -239,7 +319,7 @@ void display()
    if (mode==2)
       Print("  z=%.1f",z);
    else if (mode==4)
-      Print("  w=%.1f",w);
+      Print("  w=%.1f",def_w);
 
    //  Flush and swap
    glFlush();
@@ -256,14 +336,18 @@ void key(unsigned char ch,int x,int y)
       exit(0);
    //  Reset view angle
    else if (ch == '0')
+   {
       th = ph = 0;
-   
+      def_w = 1;
+      def_z = 0;
+      dim = 55;
+      mode = 3;
+   }
+
    //  Switch dimensions
    else if ('1'<=ch && ch<='4')
    {
       mode = ch-'0';
-      if (mode==2) z = 0;
-      if (mode==4) w = 1;
    }
    
    // Switch formula variable to adjust
@@ -279,6 +363,18 @@ void key(unsigned char ch,int x,int y)
    {
       formula_adj = 'r';
    }
+   else if (ch == 'w')
+   {
+      formula_adj = 'w';
+   }
+   else if (ch == 'z')
+   {
+      formula_adj = 'z';
+   }
+   else if (ch == 'd')
+   {
+      formula_adj = 'd';
+   }
 
    // Increase variable for lorenz equation
    else if (ch == '+')
@@ -291,9 +387,21 @@ void key(unsigned char ch,int x,int y)
       {
          b = b + 0.2;
       }
-      else
+      else if (formula_adj == 'r')
       {
          r = r + 1;
+      }
+      else if (formula_adj == 'w')
+      {
+         def_w = def_w + 1;
+      }
+      else if (formula_adj == 'z')
+      {
+         def_z = def_z + 1;
+      }
+      else if (formula_adj == 'd')
+      {
+         dim = dim + 5;
       }
    }
    //  Decrease variable for lorenz equation
@@ -307,9 +415,21 @@ void key(unsigned char ch,int x,int y)
       {
          b = b - 0.2;
       }
-      else
+      else if (formula_adj == 'r')
       {
          r = r - 1;
+      }
+      else if (formula_adj == 'w')
+      {
+         def_w = def_w - 1;
+      }
+      else if (formula_adj == 'z')
+      {
+         def_z = def_z - 1;
+      }
+      else if (formula_adj == 'd')
+      {
+         dim = dim - 5;
       }
    }
 
